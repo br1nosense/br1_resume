@@ -1,0 +1,7 @@
+:export {
+  name: "less";
+  primaryColor: var(--primaryColor, #000);
+  primaryTextColor: var(--primaryTextColor, green);
+  gfontsize: 16px;
+  accentcolor: #066bc493;
+}

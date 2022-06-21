@@ -1,0 +1,22 @@
+@accent-color: #066bc493;
+@global-font-size:16px;
+//a4的宽和高
+@A4width: 21rem * 2;
+@A4height: 29.7rem * 2;
+
+//
+@primaryColor: var(--primaryColor, #000);
+@primaryTextColor: var(--primaryTextColor, green);
+//左边样式
+
+//右边样式
+
+
+//导出变量 
+:export {
+    name: "less";
+    primaryColor: @primaryColor;
+    primaryTextColor: @primaryTextColor;
+    gfontsize:@global-font-size;
+    accentcolor:@accent-color;
+}
