@@ -1,11 +1,13 @@
 <template>
-  <div class="resume">
+  <div class="resume" ref="imageresume">
     <div class="left-column">
       <div class="avatar">
-        
-<img src="../../../src/assets/img/bfr.jpg" alt="" class="img" v-show="resumeinfo.userinfo.imgisshow">
-
-        
+        <img
+          src="../../../src/assets/img/bfr.jpg"
+          alt
+          class="img"
+          v-show="resumeinfo.userinfo.imgisshow"
+        />
       </div>
       <div class="left-info">
         <div class="left-info-top">
@@ -54,14 +56,14 @@
             </span>
             <span class="left-item-text">{{resumeinfo.userinfo.email}}</span>
           </div>
-          <div class="hobby_module"  v-show="resumeinfo.hobby.switch">
+          <div class="hobby_module" v-show="resumeinfo.hobby.switch">
             <div class="hobby_tit" style="color:aliceblue;font-weight:700">兴趣爱好</div>
 
             <div class="edutext" v-html="resumeinfo.hobby.content"></div>
           </div>
           <div class="left_hobby">
             <div class="left_hobby_item" v-for="(item,index) in resumeinfo.hobby.name" :key="index">
-              <div class="hobby" >{{item}}</div>
+              <div class="hobby">{{item}}</div>
             </div>
           </div>
         </div>
@@ -84,20 +86,12 @@
           </div>
         </div>
         <!-- 通过v-for遍历，改变index下标改变dom元素的顺序 -->
-        <div
-          class="resume_module"
-          v-for="(item,index) in edititem"
-          :key="index"
-            >
+        <div class="resume_module" v-for="(item,index) in edititem" :key="index">
           <div v-if="item.label == '教育背景'" v-show="item.switch">
             <div class="module-tit">{{item.label}}</div>
-            <div class="module-content" v-for="(info,indexj) in resumeinfo.educate" :key="indexj"   
-    >
+            <div class="module-content" v-for="(info,indexj) in resumeinfo.educate" :key="indexj">
               <div class="eduinfo">
-                <div
-                  class="timeinfo_item"
-                  v-if="!info.nowtime"
-                >{{info.start}} ~ {{info.end}}</div>
+                <div class="timeinfo_item" v-if="!info.nowtime">{{info.start}} ~ {{info.end}}</div>
                 <div class="timeinfo_item" v-else>{{info.start}} ~ 至今</div>
                 <b class="eduinfo_item">{{info.name}}</b>
                 <b class="eduinfo_item" style="padding-right:0rem">{{info.major}}</b>
@@ -111,15 +105,16 @@
           </div>
           <div v-if="item.label == '实习经历'" v-show="item.switch">
             <div class="module-tit">{{item.label}}</div>
-            <div class="module-content" v-for="(info,indexj) in resumeinfo.internshipexp" :key="indexj">
+            <div
+              class="module-content"
+              v-for="(info,indexj) in resumeinfo.internshipexp"
+              :key="indexj"
+            >
               <div class="eduinfo">
-                <div
-                  class="timeinfo_item"
-                  v-if="!info.nowtime"
-                >{{info.start}} ~ {{info.end}}</div>
+                <div class="timeinfo_item" v-if="!info.nowtime">{{info.start}} ~ {{info.end}}</div>
                 <div class="timeinfo_item" v-else>{{info.start}} ~ 至今</div>
 
-                <b class="eduinfo_item">{{info.internshipname}}</b>
+                <b class="eduinfo_item">{{info.name}}</b>
                 <b class="eduinfo_item" style="padding-right:0rem">{{info.post}}</b>
               </div>
               <div class="edutext" v-html="info.content"></div>
@@ -139,21 +134,18 @@
             </div>
           </div>
           <div v-if="item.label == '项目经历'" v-show="item.switch">
-            
             <div class="module-tit">{{item.label}}</div>
-            <div class="module-content" v-for="(info,indexj) in resumeinfo.projectexp" :key="indexj">
+            <div
+              class="module-content"
+              v-for="(info,indexj) in resumeinfo.projectexp"
+              :key="indexj"
+            >
               <div class="eduinfo">
-                <div
-                  class="timeinfo_item"
-                  v-if="!info.nowtime"
-                >{{info.start}} ~ {{info.end}}</div>
+                <div class="timeinfo_item" v-if="!info.nowtime">{{info.start}} ~ {{info.end}}</div>
                 <div class="timeinfo_item" v-else>{{info.start}} ~ 至今</div>
 
                 <b class="eduinfo_item">{{info.name}}</b>
-                <b
-                  class="eduinfo_item"
-                  style="padding-right:0rem"
-                >{{info.post}}</b>
+                <b class="eduinfo_item" style="padding-right:0rem">{{info.post}}</b>
               </div>
               <div class="edutext" v-html="info.content"></div>
             </div>
@@ -188,7 +180,7 @@ export default {
   name: "first_resume",
   data() {
     return {
-      resumeData:{}
+      resumeData: {}
     };
   },
   props: {
@@ -204,50 +196,32 @@ export default {
     }
   },
   methods: {
-    // setUser() {
-    //   // return this.userinfo
-    //   const _this = this;
-    //   setInterval(function() {
-    //     _this.$emit("resumeinfo", _this.resumeinfo);
-    //     // console.log("自动传参调用");
-    //   }, 1000);
-
-    //   // setInterval(function() {
-    //   //   window.localStorage.setItem("resume", JSON.stringify(_this.resumeinfo));
-    //   //   console.log("自动保存");
-    //   // }, 100000);
-    // }
   },
   created() {
     console.log(this.resumeinfo.userinfo.imgisshow);
-    // this.setUser();
-    // window.localStorage.getItem("resume");
-    // console.log(this.resumeinfo);
-    
-    this.resumeData = JSON.parse(window.localStorage.getItem("resumeinfo"))
+    this.resumeData = JSON.parse(window.localStorage.getItem("resumeinfo"));
   },
   watch: {
-    resumeinfo() {
-
-    },
+    resumeinfo() {}
   }
 };
 </script>
 
 <style lang="less" scoped>
 .resume {
-  padding-top: 1rem;
+  background-color: #fff;
+  // padding-top: 1rem;
   width: @A4width;
   height: @A4height;
   margin: 0 auto;
+
 }
 .left-column {
   width: @A4width * 0.3;
   height: @A4height;
   text-align: left;
-
+  float: left;
   color: #ffffff;
-  color: rgba(255, 255, 255, 0.59);
   background-color: @accent-color;
   overflow: hidden;
   display: block;
@@ -261,11 +235,13 @@ export default {
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  padding-left: 210px;
+  float: right;
   height: @A4height;
+  z-index: 3;
   width: @A4width * 0.7;
   .right-content {
-    width: 28rem;
+    width: 32rem;
+    padding-left: 10px;
     .right-work {
       .work_hope {
         display: flex;
@@ -310,6 +286,7 @@ export default {
   padding-bottom: 1rem;
   text-align: center;
   .img {
+    border: 1px solid #fff;
     text-align: center;
     margin: 0 auto;
     width: 5rem * 1.5;
@@ -348,7 +325,7 @@ export default {
 .eduinfo_item {
   white-space: nowrap;
   color: @accent-color;
-  font-size: @global-font-size ;
+  font-size: @global-font-size;
   padding: 0.2rem 1rem 0.2rem 0rem;
 }
 .edutext {
@@ -367,7 +344,7 @@ export default {
 .timeinfo_item {
   white-space: nowrap;
   color: @accent-color;
-  font-size: @global-font-size ;
+  font-size: @global-font-size;
   padding: 0.2rem 1rem 0.2rem 0rem;
   width: 150px;
 }

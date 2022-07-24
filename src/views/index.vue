@@ -1,121 +1,20 @@
 <template>
   <div class="index">
-    <div class="topmenu">
+  <Bheader></Bheader>
+  <router-view class="main"></router-view>
+  <Bfooter></Bfooter>
 
-        
-      
-      <div class="topmenu_left">
-        <span>无意简历</span>
-      </div>
-      
-      <div class="topmenu_center">
-        <div class="topmenu_item">模板中心</div>
-        <div class="topmenu_item" @click="dialogVisible =true">字体/字号</div>
-        <div class="topmenu_item">
-          <el-color-picker v-model="color1" style="margin-top:5px"></el-color-picker>
-        </div>
-        <div class="topmenu_item">
-          <el-button>下载</el-button>
-        </div>
-        <div class="topmenu_item">
-          <el-button>分享</el-button>
-        </div>
-
-        <div class="topmenu_item">
-          <el-button>发邮件</el-button>
-        </div>
-      </div>
-      
-      <div class="topmenu_right">个人中心</div>
-
-      <!--       
-      <el-menu class="el-menu-demo" mode="horizontal">
-        <el-menu-item index="1">模板中心</el-menu-item>
-        <el-menu-item index="2" @click="dialogVisible = true">字体/字号</el-menu-item>
-        <el-menu-item index="3">
-          <el-color-picker v-model="color1"></el-color-picker>
-        </el-menu-item>
-        <el-menu-item index="2" @click="dialogVisible = true">
-          <el-button>下载</el-button>
-        </el-menu-item>
-        <el-menu-item index="2" @click="dialogVisible = true">
-          <el-button>发邮箱</el-button>
-        </el-menu-item>
-        <el-menu-item index="2" @click="dialogVisible = true">
-          <el-button>分享</el-button>
-        </el-menu-item>
-      </el-menu>-->
-    </div>
-    <div class="content">
-      <!-- <router-view></router-view> -->
-      <FirstResume
-        ref="firstresume"
-        :resumeinfo="resumeData"
-        :edititem="edititem"
-        v-if="isRouterAlive"
-      />
-    </div>
-    <div class="bottom">
-      <el-fade-in-linear>
-        <EditModule
-          ref="editmodule"
-          :resumeinfo="resumeData"
-          :edititem="edititem"
-          @callback="callback"
-        />
-      </el-fade-in-linear>
-    </div>
-    <el-dialog
-      title="字体/语言设置"
-      :visible.sync="dialogVisible"
-      width="50%"
-      :before-close="handleClose"
-    >
-      <el-row :gutter="20">
-        <el-col :span="12" style="padding-left:20px">
-          <div class="grid-content bg-purple">
-            <span>
-              字体 :
-              <el-select v-model="font_family" placeholder="请选择">
-                <el-option
-                  v-for="item in font_options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </span>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="grid-content bg-purple">
-            <span>
-              文字大小 :
-              <el-select v-model="font_size" placeholder="请选择">
-                <el-option
-                  v-for="item in font_size_options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </span>
-          </div>
-        </el-col>
-      </el-row>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
-  </div>
+</div>
 </template>
 
 <script>
 /* eslint-disable */
+import html2canvas from "html2canvas";
 import { eventBus } from "@/main";
 
+
+import Bheader from '@/common/header.vue'
+import Bfooter from '@/common/footer.vue'
 import FirstResume from "./resume/first_resume.vue";
 import EditModule from "./edit/edit_module.vue";
 import { setTheme } from "../theme/theme";
@@ -125,7 +24,9 @@ export default {
   name: "Index",
   components: {
     FirstResume,
-    EditModule
+    EditModule,
+    Bheader,
+    Bfooter,
   },
   setup() {
     return {
@@ -397,7 +298,7 @@ export default {
   },
   created() {
     // console.log(window.localStorage.getItem("resumeinfo"));
-    this.resumeData = JSON.parse(window.localStorage.getItem("resumeinfo"));
+    // this.resumeData = JSON.parse(window.localStorage.getItem("resumeinfo"));
     this.autosave();
     this.gettime();
 
@@ -408,6 +309,25 @@ export default {
     //   // console.log(info);
     //   this.resumeData = info;
     // },
+    toImage() {
+      html2canvas(this.$refs.firstresume.$refs.imageresume).then(canvas => {
+        let dataURL = canvas.toDataURL("image/png");
+        let imgUrl = dataURL;
+        // 创建一个a标签，用来下载图片
+        var eleLink = document.createElement("a");
+        // 转换后的图片地址
+        eleLink.href = imgUrl;
+        // 文件名设置
+        eleLink.download = "默认文件名";
+        // 下载
+        eleLink.click();
+
+        if (this.imgUrl !== "") {
+          this.dialogTableVisible = true;
+        }
+      });
+    },
+
     gettime() {
       setInterval(() => {
         let d = new Date();
@@ -420,12 +340,12 @@ export default {
       this.resumeData = data;
     },
     open1() {
-      this.$notify({
-        title: "自动保存成功",
-        message: "简历信息于" + this.nowtime + "保存成功",
-        type: "success",
-        duration: "5000"
-      });
+      // this.$notify({
+      //   title: "自动保存成功",
+      //   message: "简历信息于" + this.nowtime + "保存成功",
+      //   type: "success",
+      //   duration: "5000"
+      // });
     },
     autosave() {
       setInterval(() => {
@@ -495,35 +415,33 @@ export default {
   position: fixed;
   width: 100%;
   z-index: 100;
- display: flex;
-        justify-content: center;
-        align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-margin: 0 auto;
+  margin: 0 auto;
   .topmenu_left {
-
-   width:300px;
-   text-align: center;
+    width: 300px;
+    text-align: center;
   }
   .topmenu_right {
-
     width: 300px;
-      text-align: center;
+    text-align: center;
   }
   .topmenu_center {
     display: flex;
     text-align: center;
-      line-height: 50px;
-      height: 50px;
+    line-height: 50px;
+    height: 50px;
     .topmenu_item {
       margin: 0px 10px;
       text-align: center;
     }
-    .topmenu_item:hover{
+    .topmenu_item:hover {
       border-bottom: 1px solid @accent-color;
-      color:@accent-color;
+      color: @accent-color;
       cursor: pointer;
-    transform: scale(1.01);
+      transform: scale(1.01);
     }
   }
 }

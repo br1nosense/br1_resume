@@ -1,9 +1,8 @@
 <template>
   <div class="edit_all">
     <div class="edit_pull" @click="pullup">
-      <i class='el-icon-arrow-up' v-if="pullstage==0"/>
-      <i class='el-icon-arrow-down' v-else/>
-    
+      <i class="el-icon-arrow-up" v-if="pullstage==0" />
+      <i class="el-icon-arrow-down" v-else />
     </div>
     <div class="edit_main" ref="editmain">
       <div class="edit_box" ref="panecontent">
@@ -174,6 +173,7 @@
                 class="demo-form-inline"
                 v-for="(item,index) in resumeData.educate"
                 :key="index"
+                style="height:300px"
               >
                 <div class="form_box">
                   <el-form-item label="学校名称">
@@ -221,41 +221,50 @@
                   </el-form-item>
                 </div>
 
-                <div class="controlbtn">
-                  <div class="controlbtn_item">
-                    <el-button
-                      icon="el-icon-arrow-up"
-                      circle
-                      @click="expup(resumeData.educate,index)"
-                    ></el-button>
+                <div class="editor">
+                  <quill-editor
+                    v-model="item.content"
+                    ref="myQuillEditor"
+                    :options="editorOption"
+                    @blur="onEditorBlur($event)"
+                    @focus="onEditorFocus($event)"
+                    @ready="onEditorReady($event)"
+                    @change="onEditorChange($event)"
+                  style="height:150px;width:1100px;"
+                  ></quill-editor>
+
+                  <div class="controlbtn">
+                    <div class="controlbtn_item">
+                      <el-button
+                        icon="el-icon-arrow-up"
+                        circle
+                        @click="expup(resumeData.educate,index)"
+                      ></el-button>
+                    </div>
+                    <div class="controlbtn_item">
+                      <el-button
+                        icon="el-icon-arrow-down"
+                        circle
+                        @click="expdown(resumeData.educate,index)"
+                      ></el-button>
+                    </div>
+                    <div class="controlbtn_item">
+                      <el-button
+                        type="danger"
+                        icon="el-icon-delete"
+                        circle
+                        @click="deleteexp(resumeData.educate,index)"
+                      ></el-button>
+                    </div>
                   </div>
-                  <div class="controlbtn_item">
-                    <el-button
-                      icon="el-icon-arrow-down"
-                      circle
-                      @click="expdown(resumeData.educate,index)"
-                    ></el-button>
-                  </div>
-                  <div class="controlbtn_item">
-                    <el-button
-                      type="danger"
-                      icon="el-icon-delete"
-                      circle
-                      @click="deleteexp(resumeData.educate,index)"
-                    ></el-button>
-                  </div>
+            
                 </div>
-                <quill-editor
-                  v-model="item.content"
-                  ref="myQuillEditor"
-                  :options="editorOption"
-                  @blur="onEditorBlur($event)"
-                  @focus="onEditorFocus($event)"
-                  @ready="onEditorReady($event)"
-                  @change="onEditorChange($event)"
-                  style="height:150px"
-                ></quill-editor>
               </el-form>
+                       <div class="globalline"></div>
+              <el-button
+                style="margin-bottom:20px"
+                @click="addnewexp(resumeData.educate)"
+              >新增一条教育经历</el-button>
             </div>
           </TabPane>
           <TabPane name="4" label="专业技能">
@@ -269,7 +278,7 @@
                   @focus="onEditorFocus($event)"
                   @ready="onEditorReady($event)"
                   @change="onEditorChange($event)"
-                  style="height:150px"
+                  style="height:150px;width:1100px;"
                 ></quill-editor>
               </div>
             </el-form>
@@ -281,7 +290,7 @@
                 class="demo-form-inline"
                 v-for="(item,index) in resumeData.projectexp"
                 :key="index"
-                style="height:270px"
+                style="height:300px"
               >
                 <div class="form_box">
                   <el-form-item label="项目名称">
@@ -310,41 +319,42 @@
                     ></el-date-picker>
                   </el-form-item>
                   <el-checkbox style="padding:10px 0px" v-model="item.nowtime">至今</el-checkbox>
-
-                  <div class="controlbtn">
-                    <div class="controlbtn_item">
-                      <el-button
-                        icon="el-icon-arrow-up"
-                        circle
-                        @click="expup(resumeData.projectexp,index)"
-                      ></el-button>
-                    </div>
-                    <div class="controlbtn_item">
-                      <el-button
-                        icon="el-icon-arrow-down"
-                        circle
-                        @click="expdown(resumeData.projectexp,index)"
-                      ></el-button>
-                    </div>
-                    <div class="controlbtn_item">
-                      <el-button
-                        type="danger"
-                        icon="el-icon-delete"
-                        circle
-                        @click="deleteexp(resumeData.projectexp,index)"
-                      ></el-button>
+                  <div class="editor">
+                    <quill-editor
+                      v-model="item.content"
+                      ref="myQuillEditor"
+                      :options="editorOption"
+                      @blur="onEditorBlur($event)"
+                      @focus="onEditorFocus($event)"
+                      @ready="onEditorReady($event)"
+                      @change="onEditorChange($event)"
+                      style="height:150px;width:1100px;"
+                    ></quill-editor>
+                    <div class="controlbtn">
+                      <div class="controlbtn_item">
+                        <el-button
+                          icon="el-icon-arrow-up"
+                          circle
+                          @click="expup(resumeData.projectexp,index)"
+                        ></el-button>
+                      </div>
+                      <div class="controlbtn_item">
+                        <el-button
+                          icon="el-icon-arrow-down"
+                          circle
+                          @click="expdown(resumeData.projectexp,index)"
+                        ></el-button>
+                      </div>
+                      <div class="controlbtn_item">
+                        <el-button
+                          type="danger"
+                          icon="el-icon-delete"
+                          circle
+                          @click="deleteexp(resumeData.projectexp,index)"
+                        ></el-button>
+                      </div>
                     </div>
                   </div>
-                  <quill-editor
-                    v-model="item.content"
-                    ref="myQuillEditor"
-                    :options="editorOption"
-                    @blur="onEditorBlur($event)"
-                    @focus="onEditorFocus($event)"
-                    @ready="onEditorReady($event)"
-                    @change="onEditorChange($event)"
-                    style="height:150px"
-                  ></quill-editor>
                 </div>
               </el-form>
               <div class="globalline"></div>
@@ -359,7 +369,7 @@
               :inline="true"
               class="demo-form-inline"
               v-for="(item,index) in resumeData.internshipexp "
-              style="height:270px"
+              style="height:300px"
               :key="index"
             >
               <div class="form_box">
@@ -391,6 +401,19 @@
                 <el-checkbox style="padding:10px 0px" v-model="item.nowtime">至今</el-checkbox>
               </div>
 
+<div class="editor">
+
+              <quill-editor
+                v-model="item.content"
+                ref="myQuillEditor"
+                :options="editorOption"
+                @blur="onEditorBlur($event)"
+                @focus="onEditorFocus($event)"
+                @ready="onEditorReady($event)"
+                @change="onEditorChange($event)"
+                style="height:150px;width:1100px;"
+              ></quill-editor>
+              
               <div class="controlbtn">
                 <div class="controlbtn_item">
                   <el-button
@@ -415,16 +438,7 @@
                   ></el-button>
                 </div>
               </div>
-              <quill-editor
-                v-model="item.content"
-                ref="myQuillEditor"
-                :options="editorOption"
-                @blur="onEditorBlur($event)"
-                @focus="onEditorFocus($event)"
-                @ready="onEditorReady($event)"
-                @change="onEditorChange($event)"
-                style="height:150px"
-              ></quill-editor>
+</div>
             </el-form>
             <div class="globalline"></div>
             <el-button
@@ -517,7 +531,7 @@
               @focus="onEditorFocus($event)"
               @ready="onEditorReady($event)"
               @change="onEditorChange($event)"
-              style="height:150px"
+              style="height:150px;"
             ></quill-editor>
           </TabPane>
           <TabPane name="11" label="校园经历">
@@ -526,7 +540,7 @@
               class="demo-form-inline"
               v-for="(item,index) in resumeData.schoolexp"
               :key="index"
-              style="height:270px"
+              style="height:350px"
             >
               <div class="form_box">
                 <el-form-item label="项目名称">
@@ -589,7 +603,7 @@
                 @focus="onEditorFocus($event)"
                 @ready="onEditorReady($event)"
                 @change="onEditorChange($event)"
-                style="height:150px"
+                style="width:1100px;"
               ></quill-editor>
             </el-form>
             <div class="globalline"></div>
@@ -600,7 +614,7 @@
               :inline="true"
               class="demo-form-inline"
               v-for="(item,index) in resumeData.customize"
-              style="height:270px"
+              style="height:300px "
               :key="index"
             >
               <div class="form_box">
@@ -632,40 +646,43 @@
                 <el-checkbox style="padding:10px 0px" v-model="item.nowtime">至今</el-checkbox>
               </div>
 
-              <div class="controlbtn">
-                <div class="controlbtn_item">
-                  <el-button
-                    icon="el-icon-arrow-up"
-                    circle
-                    @click="expup(resumeData.customize,index)"
-                  ></el-button>
-                </div>
-                <div class="controlbtn_item">
-                  <el-button
-                    icon="el-icon-arrow-down"
-                    circle
-                    @click="expdown(resumeData.customize,index)"
-                  ></el-button>
-                </div>
-                <div class="controlbtn_item">
-                  <el-button
-                    type="danger"
-                    icon="el-icon-delete"
-                    circle
-                    @click="deleteexp(resumeData.customize,index)"
-                  ></el-button>
+              <div class="editor">
+                <quill-editor
+                  v-model="item.content"
+                  ref="myQuillEditor"
+                  :options="editorOption"
+                  @blur="onEditorBlur($event)"
+                  @focus="onEditorFocus($event)"
+                  @ready="onEditorReady($event)"
+                  @change="onEditorChange($event)"
+                  style="height:150px;width:1100px;"
+                ></quill-editor>
+
+                <div class="controlbtn">
+                  <div class="controlbtn_item">
+                    <el-button
+                      icon="el-icon-arrow-up"
+                      circle
+                      @click="expup(resumeData.customize,index)"
+                    ></el-button>
+                  </div>
+                  <div class="controlbtn_item">
+                    <el-button
+                      icon="el-icon-arrow-down"
+                      circle
+                      @click="expdown(resumeData.customize,index)"
+                    ></el-button>
+                  </div>
+                  <div class="controlbtn_item">
+                    <el-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      circle
+                      @click="deleteexp(resumeData.customize,index)"
+                    ></el-button>
+                  </div>
                 </div>
               </div>
-              <quill-editor
-                v-model="item.content"
-                ref="myQuillEditor"
-                :options="editorOption"
-                @blur="onEditorBlur($event)"
-                @focus="onEditorFocus($event)"
-                @ready="onEditorReady($event)"
-                @change="onEditorChange($event)"
-                style="height:150px"
-              ></quill-editor>
             </el-form>
             <div class="globalline"></div>
             <el-button style="margin-bottom:20px" @click="addnewexp(resumeData.customize)">新增一条经历</el-button>
@@ -703,8 +720,8 @@ export default {
   created() {
     // console.log("编辑页面！！！");
     this.getresumeinfo();
-    this.resumeinfo = JSON.parse(window.localStorage.getItem("resumeinfo"))
-    this.autosave()
+    this.resumeinfo = JSON.parse(window.localStorage.getItem("resumeinfo"));
+    this.autosave();
   },
   data() {
     return {
@@ -716,7 +733,28 @@ export default {
       resumeData: {},
       editorOption: {},
       refresh: true,
-      pullstage:1,
+      pullstage: 1,
+      // 富文本编辑器配置
+      editorOption: {
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'], // 加粗 斜体 下划线 删除线
+            // ['blockquote', 'code-block'], // 引用  代码块
+            [{ header: 1 }, { header: 2 }], // 1、2 级标题
+            [{ list: 'ordered' }, { list: 'bullet' }], // 有序、无序列表
+            [{ script: 'sub' }, { script: 'super' }], // 上标/下标
+            [{ indent: '-1' }, { indent: '+1' }], // 缩进
+            [{ direction: 'rtl' }], // 文本方向
+            [{ size: ['12', '14', '16', '18', '20', '22', '24', '28', '32', '36'] }], // 字体大小
+            [{ header: [1, 2, 3, 4, 5, 6] }], // 标题
+            [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
+            // [{ font: ['songti'] }], // 字体种类
+            [{ align: [] }], // 对齐方式
+            ['clean'], // 清除文本格式
+          ]
+        },
+        placeholder: '请输入正文'
+      },
     };
   },
 
@@ -730,8 +768,11 @@ export default {
     // },
     autosave() {
       setInterval(() => {
-        window.localStorage.setItem("resumeinfo", JSON.stringify(this.resumeData));
-        this.$emit('callback',this.resumeData)
+        window.localStorage.setItem(
+          "resumeinfo",
+          JSON.stringify(this.resumeData)
+        );
+        this.$emit("callback", this.resumeData);
       }, 1000);
     },
     getresumeinfo() {
@@ -747,12 +788,12 @@ export default {
       this.$nextTick(() => {
         if (this.$refs.editmain.style.height === "70px") {
           this.$refs.editmain.style.height = "400px";
-          
-      this.pullstage=1
+
+          this.pullstage = 1;
         } else {
           this.$refs.editmain.style.height = "70px";
-          
-      this.pullstage=0
+
+          this.pullstage = 0;
         }
       });
 
@@ -967,10 +1008,14 @@ export default {
 .el-form-item {
   // margin-bottom:10px
 }
+
+.editor {
+  margin-bottom: 100px;
+  display: flex;
+}
 .controlbtn {
-  position: fixed;
-  right: 15%;
-  flex: 1;
+  float: right;
+  margin: 25px 0px 0px 25px;
   .controlbtn_item {
     margin-bottom: 10px;
   }

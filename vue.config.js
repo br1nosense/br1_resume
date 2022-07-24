@@ -3,6 +3,17 @@ const path = require('path')
 const webpack = require('webpack')
 
 module.exports = defineConfig({
+
+//
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src')
+      }
+    }
+  },
+  lintOnSave:false,//关闭语法检查
+
   transpileDependencies: true,
   pluginOptions: {
     "style-resources-loader": {
@@ -20,5 +31,6 @@ module.exports = defineConfig({
       jQuery: 'jquery',
       'window.jQuery': 'jquery'
     }])
-  }
+  },
+  
 })

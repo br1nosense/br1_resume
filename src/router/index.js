@@ -3,33 +3,39 @@ import Vue from 'vue'
 //1.通过使用VUE.use()，安装插件
 
 const Index = () => import('../views/index.vue')
-const NormalInfo = () => import('../views/edit/editchild/NormalInfo.vue')
-const SpecicalSkill = () => import('../views/edit/editchild/SpecicalSkill.vue')
+const Home =() => import('@/views/home/home.vue')
 const EditModule = () => import('../views/edit/edit_module.vue')
+const Resumeshow = () =>import('../views/resume/resumeshow.vue')
+const Login = () =>import('../views/login/Login.vue')
+const Register = () =>import('../views/login/Register.vue')
 
 Vue.use(VueRouter)
 
 const routes = [
     {
         path: '/',
-        redirect: '/index'
-    }, {
-        path: '/index',
         component: Index,
-        children: [{
-            path: '/edit_module',
-            component: EditModule
-        }, {
-            path: '/normal_info',
-            component: NormalInfo
-        },
-        {
-            path: 'cinema_manage',
-            component: SpecicalSkill
-        }
+        name: 'index',
+        redirect: '/home',
+        children: [
+            {path: 'home', component: Home},
+      
 
         ]
+    },
+    {
+        path: '/resumeshow',
+        component: Resumeshow
+    },
+    {
+        path: '/login',
+        component: Login
+    },
+    {
+        path: '/register',
+        component: Register
     }
+
 
 ]
 
