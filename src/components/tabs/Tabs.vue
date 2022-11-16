@@ -167,10 +167,9 @@ export default {
     },
     tabchangeleft(index) {
       if (index > 0) {
-        // console.log(this.$refs.module_content);
         //置换atbitem下标
         let temp;
-        temp = this.Edititem[index];
+        temp = this.navList[index];
         this.navList[index] = this.navList[index - 1];
         this.navList[index - 1] = temp;
         this.refresh = false;
@@ -181,11 +180,6 @@ export default {
           _this.refresh = true;
         });
         this.moduleup(index);
-        // if (index + 1 == this.activekeyj) {
-        //   this.barOffset = this.barOffset - this.barWidth;
-        //   this.activekeyj = this.activekeyj - 1;
-
-        // }
       }
     },
     tabchangeright(index) {
@@ -201,15 +195,6 @@ export default {
         });
         this.moduledown(index);
 
-
-    //  if (index + 1 == this.activekeyj) {
-    //       this.barOffset = this.barOffset + this.barWidth;
-    //       this.activekeyj = this.activekeyj + 1;
-
-    //     }else  if (index + 2 == this.activekeyj ||index-2 ==this.activekeyj){
-    //         this.barOffset = this.barOffset - this.barWidth;
-    //       this.activekeyj = this.activekey
-    //     }
     
       } else {
         console.log("达咩达咩达咩");

@@ -230,7 +230,7 @@
                     @focus="onEditorFocus($event)"
                     @ready="onEditorReady($event)"
                     @change="onEditorChange($event)"
-                  style="height:150px;width:1100px;"
+                    style="height:150px;width:1100px;"
                   ></quill-editor>
 
                   <div class="controlbtn">
@@ -257,14 +257,10 @@
                       ></el-button>
                     </div>
                   </div>
-            
                 </div>
               </el-form>
-                       <div class="globalline"></div>
-              <el-button
-                style="margin-bottom:20px"
-                @click="addnewexp(resumeData.educate)"
-              >新增一条教育经历</el-button>
+              <div class="globalline"></div>
+              <el-button style="margin-bottom:20px" @click="addnewexp(resumeData.educate)">新增一条教育经历</el-button>
             </div>
           </TabPane>
           <TabPane name="4" label="专业技能">
@@ -401,44 +397,43 @@
                 <el-checkbox style="padding:10px 0px" v-model="item.nowtime">至今</el-checkbox>
               </div>
 
-<div class="editor">
+              <div class="editor">
+                <quill-editor
+                  v-model="item.content"
+                  ref="myQuillEditor"
+                  :options="editorOption"
+                  @blur="onEditorBlur($event)"
+                  @focus="onEditorFocus($event)"
+                  @ready="onEditorReady($event)"
+                  @change="onEditorChange($event)"
+                  style="height:150px;width:1100px;"
+                ></quill-editor>
 
-              <quill-editor
-                v-model="item.content"
-                ref="myQuillEditor"
-                :options="editorOption"
-                @blur="onEditorBlur($event)"
-                @focus="onEditorFocus($event)"
-                @ready="onEditorReady($event)"
-                @change="onEditorChange($event)"
-                style="height:150px;width:1100px;"
-              ></quill-editor>
-              
-              <div class="controlbtn">
-                <div class="controlbtn_item">
-                  <el-button
-                    icon="el-icon-arrow-up"
-                    circle
-                    @click="expup(resumeData.internshipexp,index)"
-                  ></el-button>
-                </div>
-                <div class="controlbtn_item">
-                  <el-button
-                    icon="el-icon-arrow-down"
-                    circle
-                    @click="expdown(resumeData.internshipexp,index)"
-                  ></el-button>
-                </div>
-                <div class="controlbtn_item">
-                  <el-button
-                    type="danger"
-                    icon="el-icon-delete"
-                    circle
-                    @click="deleteexp(resumeData.internshipexp,index)"
-                  ></el-button>
+                <div class="controlbtn">
+                  <div class="controlbtn_item">
+                    <el-button
+                      icon="el-icon-arrow-up"
+                      circle
+                      @click="expup(resumeData.internshipexp,index)"
+                    ></el-button>
+                  </div>
+                  <div class="controlbtn_item">
+                    <el-button
+                      icon="el-icon-arrow-down"
+                      circle
+                      @click="expdown(resumeData.internshipexp,index)"
+                    ></el-button>
+                  </div>
+                  <div class="controlbtn_item">
+                    <el-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      circle
+                      @click="deleteexp(resumeData.internshipexp,index)"
+                    ></el-button>
+                  </div>
                 </div>
               </div>
-</div>
             </el-form>
             <div class="globalline"></div>
             <el-button
@@ -738,23 +733,38 @@ export default {
       editorOption: {
         modules: {
           toolbar: [
-            ['bold', 'italic', 'underline', 'strike'], // 加粗 斜体 下划线 删除线
+            ["bold", "italic", "underline", "strike"], // 加粗 斜体 下划线 删除线
             // ['blockquote', 'code-block'], // 引用  代码块
             [{ header: 1 }, { header: 2 }], // 1、2 级标题
-            [{ list: 'ordered' }, { list: 'bullet' }], // 有序、无序列表
-            [{ script: 'sub' }, { script: 'super' }], // 上标/下标
-            [{ indent: '-1' }, { indent: '+1' }], // 缩进
-            [{ direction: 'rtl' }], // 文本方向
-            [{ size: ['12', '14', '16', '18', '20', '22', '24', '28', '32', '36'] }], // 字体大小
+            [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
+            [{ script: "sub" }, { script: "super" }], // 上标/下标
+            [{ indent: "-1" }, { indent: "+1" }], // 缩进
+            [{ direction: "rtl" }], // 文本方向
+            [
+              {
+                size: [
+                  "12",
+                  "14",
+                  "16",
+                  "18",
+                  "20",
+                  "22",
+                  "24",
+                  "28",
+                  "32",
+                  "36"
+                ]
+              }
+            ], // 字体大小
             [{ header: [1, 2, 3, 4, 5, 6] }], // 标题
             [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
             // [{ font: ['songti'] }], // 字体种类
             [{ align: [] }], // 对齐方式
-            ['clean'], // 清除文本格式
+            ["clean"] // 清除文本格式
           ]
         },
-        placeholder: '请输入正文'
-      },
+        placeholder: "请输入正文"
+      }
     };
   },
 

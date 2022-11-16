@@ -7,19 +7,18 @@
 
       <div class="topmenu_center">
         <div class="topmenu_item">模板中心</div>
-        <div class="topmenu_item" @click="dialogVisible =true">字体/字号</div>
+        <div class="topmenu_item" @click="dialogVisible = true">字体/字号</div>
         <div class="topmenu_item">
           <el-color-picker v-model="color1" style="margin-top:5px"></el-color-picker>
         </div>
         <div class="topmenu_item">
-          <el-button @click="toImage">下载</el-button>
+          <el-button @click="toImage" :loading="downloadLoading">下载</el-button>
         </div>
+        <!-- <div class="topmenu_item">
+          <el-button @click="domToPdfBase64">分享</el-button>
+        </div> -->
         <div class="topmenu_item">
-          <el-button>分享</el-button>
-        </div>
-
-        <div class="topmenu_item">
-          <el-button>发邮件</el-button>
+          <el-button @click="savedata">保存</el-button>
         </div>
       </div>
 
@@ -27,41 +26,22 @@
     </div>
 
     <div class="content">
-      <FirstResume
-        ref="firstresume"
-        :resumeinfo="resumeData"
-        :edititem="edititem"
-        v-if="isRouterAlive"
-      />
+      <FirstResume ref="firstresume" :resumeinfo="resumeData" :edititem="edititem" v-if="isRouterAlive" />
     </div>
     <div class="bottom">
       <el-fade-in-linear>
-        <EditModule
-          ref="editmodule"
-          :resumeinfo="resumeData"
-          :edititem="edititem"
-          @callback="callback"
-        />
+        <EditModule ref="editmodule" :resumeinfo="resumeData" :edititem="edititem" @callback="callback" />
       </el-fade-in-linear>
     </div>
-    <el-dialog
-      title="字体/语言设置"
-      :visible.sync="dialogVisible"
-      width="50%"
-      :before-close="handleClose"
-    >
+    <el-dialog title="字体/语言设置" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
       <el-row :gutter="20">
         <el-col :span="12" style="padding-left:20px">
           <div class="grid-content bg-purple">
             <span>
               字体 :
               <el-select v-model="font_family" placeholder="请选择">
-                <el-option
-                  v-for="item in font_options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+                <el-option v-for="item in font_options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
               </el-select>
             </span>
           </div>
@@ -71,12 +51,8 @@
             <span>
               文字大小 :
               <el-select v-model="font_size" placeholder="请选择">
-                <el-option
-                  v-for="item in font_size_options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+                <el-option v-for="item in font_size_options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
               </el-select>
             </span>
           </div>
@@ -93,6 +69,8 @@
 
 <script>
 /* eslint-disable */
+import jsPDF from 'jspdf'
+import html2canvas from "html2canvas";
 import { eventBus } from "@/main";
 import { setStore, getStore, removeStore } from "@/utils/storage.js";
 
@@ -112,10 +90,11 @@ export default {
     };
   },
 
-   data() {
+  data() {
     return {
       nowtime: "",
       dialogVisible: false,
+      downloadLoading:false,
       color1: this.GlobalCSS.accentcolor,
       font_size_options: [
         {
@@ -368,23 +347,29 @@ export default {
           }
         ]
       }
+
     };
   },
   created() {
-    // console.log(window.localStorage.getItem("resumeinfo"));
-    this.resumeData = JSON.parse(setStore("resumeinfo"));
+    this.resumeData = JSON.parse(getStore("resumeinfo"));
     this.autosave();
     this.gettime();
-
-    // console.log(this.$refs);
+  },
+  provide() {
+    return {
+      reload: this.reload
+    };
   },
   methods: {
-    // getuserinfo(info) {
-    //   // console.log(info);
-    //   this.resumeData = info;
-    // },
     toImage() {
-      html2canvas(this.$refs.firstresume.$refs.imageresume).then(canvas => {
+        this.downloadLoading = true
+      let targetDom = this.$refs.firstresume.$refs.imageresume
+      html2canvas(targetDom, {
+        allowTaint: false,
+        scale: 2,
+        logging: false,
+        useCORS: true,
+      }).then(canvas => {
         let dataURL = canvas.toDataURL("image/png");
         let imgUrl = dataURL;
         // 创建一个a标签，用来下载图片
@@ -395,13 +380,74 @@ export default {
         eleLink.download = "默认文件名";
         // 下载
         eleLink.click();
-
         if (this.imgUrl !== "") {
           this.dialogTableVisible = true;
         }
+        this.downloadLoading = false
+        
+      }).catch(()=>{
+        this.downloadLoading = false
+      })
+    },
+    savedata(){
+      //localstorage保存对象需要转化成字符串
+      setStore('resumeinfo',this.resumeData)
+           this.$notify({
+        title: "保存成功",
+        message: "简历信息于" + this.nowtime + "保存成功",
+        type: "success",
+        duration: "5000"
       });
     },
-
+    getresumeData(){
+      
+    },
+    domToPdfBase64(targetId, printOrientation) {
+      let targetDom = this.$refs.firstresume.$refs.imageresume //你的目标元素id
+      var copyDom = targetDom.cloneNode(true) // 克隆节点
+      copyDom.style.width = targetDom.offsetWidth + 'px'
+      copyDom.style.height = targetDom.scrollHeight + 'PX' // 获得高度
+      document.body.appendChild(copyDom) // 插入节点
+      html2canvas(copyDom).then((canvas) => {
+        document.body.removeChild(copyDom) // 删除节点
+        var contentWidth = canvas.width;
+        var contentHeight = canvas.height;
+        //一页pdf显示html页面生成的canvas高度;
+        var pageHeight = contentWidth / 595.28 * 841.89;
+        //未生成pdf的html页面高度
+        var leftHeight = contentHeight;
+        //页面偏移
+        var position = 0;
+        //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+        var imgWidth = 595.28;
+        var imgHeight = 595.28 / contentWidth * contentHeight;
+        var pageData = canvas.toDataURL('image/jpeg', 1.0);
+        //第一个参数： l：横向  p：纵向;第二个参数：测量单位（"pt"，"mm", "cm", "m", "in" or "px"）;第三个参数：可以是下面格式，默认为“a4”
+        var pdf = new jsPDF(printOrientation, 'pt', 'a4');
+        if (leftHeight < pageHeight) {
+          // 在pdf.addImage(pageData, 'JPEG', 左，上，宽度，高度)设置在pdf中显示；
+          pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight);
+        } else { // 分页
+          while (leftHeight > 10) {
+            pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight);
+            leftHeight -= pageHeight;
+            position -= 871.89;
+            //避免添加空白页
+            if (leftHeight > 10) {
+              pdf.addPage();
+            }
+          }
+        }
+        let pdf64 = pdf.output("datauristring").replace("data:application/pdf;base64,", "");
+        console.log(pdf64);
+        //pdf预览
+        let blob = base64ToBlob(pdf64);
+        //获取当前url，直接放到iframe就能用，下载同理。直接将blobURL放到浏览器可以预览
+        let blobURL = window.URL.createObjectURL(blob);
+        console.log(blobURL);
+        return pdf64;
+      })
+    },
     gettime() {
       setInterval(() => {
         let d = new Date();
@@ -433,7 +479,7 @@ export default {
         .then(_ => {
           done();
         })
-        .catch(_ => {});
+        .catch(_ => { });
     },
     init() {
       setTheme("default");
@@ -454,12 +500,12 @@ export default {
     },
     reload() {
       this.isRouterAlive = false;
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         this.isRouterAlive = true;
       });
     }
   },
-  mounted() {},
+  mounted() { },
   watch: {
     data() {
       this.getuserinfo();
@@ -474,9 +520,12 @@ export default {
 </script>
 
 <style  lang="less" scoped>
+@global-font-size: 16px;
+
 .index {
   background-color: rgb(65, 65, 65);
 }
+
 .topmenu {
   height: 50px;
   line-height: 50px;
@@ -489,23 +538,28 @@ export default {
   align-items: center;
 
   margin: 0 auto;
+
   .topmenu_left {
     width: 300px;
     text-align: center;
   }
+
   .topmenu_right {
     width: 300px;
     text-align: center;
   }
+
   .topmenu_center {
     display: flex;
     text-align: center;
     line-height: 50px;
     height: 50px;
+
     .topmenu_item {
       margin: 0px 10px;
       text-align: center;
     }
+
     .topmenu_item:hover {
       border-bottom: 1px solid @accent-color;
       color: @accent-color;
@@ -514,7 +568,12 @@ export default {
     }
   }
 }
+
 p {
   color: @primaryTextColor;
+}
+
+.content {
+  padding-top: 70px;
 }
 </style>
